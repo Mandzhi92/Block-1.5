@@ -1,13 +1,21 @@
-'use strict'
-
 const slider = document.querySelector('.swiper-container');
-let mySwiper;
-
-
 
 function mobileSlider() {
-    mySwiper = new Swiper(slider, {
-        breakpoints: {
+  if (window.innerWidth <= 768 && slider.dataset.mobile == 'false') {
+      mySwiper = new Swiper(slider, {
+      
+      slideClass: 'swiper-slide',
+      pagination: {
+       	 el: '.swiper-pagination',
+          
+          clickable: true,
+         },
+            
+         keyboard: {
+            enabled:true,
+            onlyInViewport:true,
+         },  
+         breakpoints: {
             320: {
                 slidesPerView:'auto',
                 speed:600,
@@ -21,21 +29,28 @@ function mobileSlider() {
             1120: {
                 slidesPerView:4,
                 allowTouchMove:false,
-            }
+            },
         },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-       keyboard: {
-            enabled:true,
-            onlyInViewport:true,
-        },   
     });
-  
+
+    slider.dataset.mobile = 'true';
+  }
+
+  if (window.innerWidth > 768) {
+    slider.dataset.mobile = 'false';
+    if (slider.classList.contains('swiper-initialized')) {
+      mySwiper.destroy();
+    }
+  }
 }
+
 mobileSlider()
 
-window.addEventListener('resize', function(){
-    mobileSlider()
-})
+
+window.addEventListener('resize', () => {
+  if(window.matchMedia('(orientation: portrait)')){
+   mobileSlider()
+  } else{
+   mySwiper.destroy()
+  };
+});
